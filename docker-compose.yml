@@ -1,0 +1,58 @@
+version: '1.0'
+
+services:
+  postgres_db:
+    image: postgres:12-alpine
+    hostname: postgres_db
+    restart: always
+    volumes:
+      - price_alert_data:/var/lib/postgresql/data
+    env_file:
+      - .env
+    networks:
+      - live
+
+  redis_db:
+    image: 'redis:alpine'
+    hostname: redis_db
+    networks:
+      - live
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    hostname: app
+    restart: always
+    env_file:
+      - .env
+    stdin_open: true
+    ports:
+      - "8000:8000"
+    command: bash -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    depends_on:
+      # - redis_db
+      - postgres_db
+    networks:
+      - live
+
+  celery:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: "celery -A price_alert_system worker -c 1"
+    env_file:
+      - .env
+    depends_on:
+      - app
+      - redis_db
+      - postgres_db
+    restart: on-failure
+    networks:
+      - live
+
+volumes:
+  price_alert_data: 
+
+networks:
+  live:
