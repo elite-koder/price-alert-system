@@ -33,22 +33,22 @@ url param
 ## start service
 docker-compose up --build
 
-#### test case 1
-##### add new currency (scrip)
+### test case 1
+#### add new currency (scrip)
 curl --location 'http://localhost:8000/scrips/' \
 --header 'Content-Type: application/json' \
 --data '{
     "code": "BTC",
     "price": 10000
 }'
-##### add new alert 
+#### add new alert 
 curl --location 'http://localhost:8000/alerts/' \
 --header 'Content-Type: application/json' \
 --data '{
     "scrip": "1",
     "target_price": 20000
 }'
-##### update price of currency (scrip)
+#### update price of currency (scrip)
 curl --location --request PATCH 'http://localhost:8000/scrips/1/' \
 --header 'Content-Type: application/json' \
 --data '{
@@ -57,22 +57,22 @@ curl --location --request PATCH 'http://localhost:8000/scrips/1/' \
 
 check logs for alert message
 
-#### test case 2
-##### add new currency (scrip)
+### test case 2
+#### add new currency (scrip)
 curl --location 'http://localhost:8000/scrips/' \
 --header 'Content-Type: application/json' \
 --data '{
     "code": "ETH",
     "price": 5000
 }'
-##### add new alert 
+#### add new alert 
 curl --location 'http://localhost:8000/alerts/' \
 --header 'Content-Type: application/json' \
 --data '{
     "scrip": "2",
     "target_price": 6000
 }'
-##### update price of currency (scrip)
+#### update price of currency (scrip)
 curl --location --request PATCH 'http://localhost:8000/scrips/2/' \
 --header 'Content-Type: application/json' \
 --data '{
